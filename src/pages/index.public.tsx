@@ -8,18 +8,18 @@ interface IProps {
   content: WithId<PostData>[]
 }
 
-export default function Home({ content }: IProps) {
+export default function Home() {
 
-  const post = content[0]
+  // const post = content[0]
 
   return (
     <>
-      <DefaultLayout title="Home">
+      {/* <DefaultLayout title="Home">
         {
           content.map((post, index) => {
             return (
               <PostAnchor
-                key={post._id.toString()  }
+                key={post._id.toString()}
                 index={index + 1}
                 title={post.title}
                 author={post.author}
@@ -30,19 +30,19 @@ export default function Home({ content }: IProps) {
             )
           })
         }
-      </DefaultLayout>
+      </DefaultLayout> */}
     </>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+// export const getStaticProps: GetStaticProps = async () => {
 
-  const response = await api.get<WithId<PostData>[]>("/contents")
-  const content = response.data
+//   const response = await api.get<WithId<PostData>[]>("/contents")
+//   const content = response.data
 
-  return {
-    props: {
-      content
-    }
-  }
-}
+//   return {
+//     props: {
+//       content
+//     }
+//   }
+// }
