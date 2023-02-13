@@ -1,5 +1,5 @@
-import { Box, Divider, Flex, Heading, Stack, Text, Icon } from "@chakra-ui/react";
-import { AuthorTag, DefaultLayout, LinkComponent, Viewer } from "@/pages/interface";
+import { Box, Divider, Flex, Heading, Stack, Text, Icon, Center, Button } from "@chakra-ui/react";
+import { AuthorTag, Comments, DefaultLayout, LinkComponent, Viewer } from "@/pages/interface";
 import { FaRegCommentAlt } from "react-icons/fa"
 import { ParsedUrlQuery } from "querystring";
 import { GetStaticProps } from "next/types"
@@ -21,7 +21,7 @@ export default function Post({ post, children, parent }: IProps) {
   return (
     <DefaultLayout title={post.title || post.body}>
       <Stack direction="row" spacing={6} px={2}>
-        <Box borderRight="1px dotted #62356955" w="1px"></Box>
+        <Box borderRight="1px dotted #62356955" w="1px"/>
         <Box>
           {
             !post.title &&
@@ -53,6 +53,18 @@ export default function Post({ post, children, parent }: IProps) {
           </Box>
         </Box>
       </Stack>
+      <Flex 
+        borderRadius="lg"
+        border="1px solid #62356955" 
+        my={6}
+        align="center"
+        minH="70px"
+      >
+        <Button variant="outline" borderColor="#62356955" ml={8} size="sm">
+          Responder
+        </Button>
+      </Flex>
+      <Comments comments={children}/>
     </DefaultLayout>
   )
 }

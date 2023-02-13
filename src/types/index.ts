@@ -1,3 +1,4 @@
+import { WithId } from "mongodb"
 import { Session } from "next-auth"
 
 export interface UserData {
@@ -17,7 +18,7 @@ export interface PostData {
   updatedAt: string,
   parent_id: string | null,
   owner_id: string,
-  children: [],
+  children: WithId<PostData>[] | [],
   children_deep_count: number
 }
 
