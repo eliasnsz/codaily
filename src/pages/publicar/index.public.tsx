@@ -18,7 +18,7 @@ export default function Publicar() {
         router.push("/")
       }
     }
-  }, [session, router])
+  }, [session, router, status])
   
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
