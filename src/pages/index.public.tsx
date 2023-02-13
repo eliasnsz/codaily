@@ -38,7 +38,7 @@ export default function Home({ content }: IProps) {
 export const getStaticProps: GetStaticProps = async () => {
 
   const response = await api.get<WithId<PostData>[]>("/contents")
-  const content = response.data
+  const content = response.data.reverse()
 
   return {
     props: {
