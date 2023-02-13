@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react"
 import { ChakraProvider } from '@chakra-ui/react'
 import { Header } from './interface'
 
+import "../styles/bytemd.css"
 import moment from "moment"
 import 'moment/locale/pt-br'
 

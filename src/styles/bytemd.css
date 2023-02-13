@@ -1,0 +1,20 @@
+.bytemd-toolbar-icon:nth-child(1),
+.bytemd-toolbar-icon:nth-child(4),
+.bytemd-status  {
+  display: none;
+}
+
+.bytemd {
+  border: none !important;
+  margin-top: 3px;
+  border-radius: 10px;
+  height: calc(100vh - 300px) !important;
+}
+
+.bytemd-toolbar {
+  background-color: transparent !important;
+}
+
+.bytemd-fullscreen {
+  z-index: 100;
+}

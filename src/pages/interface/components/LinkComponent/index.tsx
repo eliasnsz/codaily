@@ -8,14 +8,18 @@ interface LinkProps {
   children: ReactNode,
   color?: string,
   fontWeight?: number | string
+  target?: string
 }
 
-const LinkComponent: React.FC<LinkProps> = ({ href, children, color, fontWeight }: LinkProps) => {
+const LinkComponent: React.FC<LinkProps> = (
+  { href, children, color, fontWeight, target }: LinkProps) => {
+
   return (
     <ChakraLink 
       fontSize="sm" 
       color={color || "blue.500"} 
       href={href}
+      target={target || "_self"}
       fontWeight={fontWeight || 400}
     >
       {children}

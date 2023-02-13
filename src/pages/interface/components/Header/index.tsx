@@ -1,20 +1,9 @@
-import { Box, Flex, IconButton, Image, Link as ChakraLink, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack } from "@chakra-ui/react"
+import { Box, Flex, IconButton, Image, Link as ChakraLink, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text } from "@chakra-ui/react"
 import { signOut, useSession } from "next-auth/react"
 import { FaUserAlt } from "react-icons/fa"
 
 import Link from "next/link"
-import { Session } from "next-auth"
-
-interface ISession extends Session {
-  user?: {
-    id?: string,
-    email?: string,
-    username?: string,
-    createdAt?: string,
-    updatedAt?: string,
-  },
-  expires: string
-}
+import { ISession } from "@/types"
 
 const Header: React.FC = () => {
   const { data: session } = useSession()
@@ -30,11 +19,13 @@ const Header: React.FC = () => {
           px={4}
           align="center"
         >
-          <Image
-            h="80px" 
-            src="https://i.imgur.com/RA1JDy0.png"
-            alt="logo-codaily"
-          />
+          <Link href="/">
+            <Image
+              h="80px"
+              src="https://i.imgur.com/RA1JDy0.png"
+              alt="logo-codaily"
+            />
+          </Link>
           {
             !session ? <LoginOrRegister/> : <UserProfile session={session as ISession}/>
           }
@@ -78,7 +69,7 @@ function UserProfile({ session }: IProps) {
           {session.user?.username}
         </MenuItem>
         <MenuDivider mx={-2} />
-        <MenuItem borderRadius="md">
+        <MenuItem borderRadius="md" as={Link} href="/publicar">
           Publicar novo conteúdo
         </MenuItem>
         <MenuItem borderRadius="md">

@@ -1,3 +1,5 @@
+import { Session } from "next-auth"
+
 export interface UserData {
   username: string,
   email: string,
@@ -17,4 +19,15 @@ export interface PostData {
   owner_id: string,
   children: [],
   children_deep_count: number
+}
+
+export interface ISession extends Session {
+  user?: {
+    id?: string,
+    email?: string,
+    username?: string,
+    createdAt?: string,
+    updatedAt?: string,
+  },
+  expires: string
 }
