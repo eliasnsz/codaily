@@ -70,7 +70,7 @@ function CommentTitle({ body }: CommentProps) {
             as={FaRegCommentAlt}
             mr={1}
           />
-            "{ body }"
+            {`"${body}"`}
         </Text>
       </Box>
     </>
