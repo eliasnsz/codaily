@@ -2,8 +2,8 @@ import { Box, Button, Flex, FormLabel, Heading, Input, Stack, Text, useToast } f
 import { signIn, useSession } from "next-auth/react"
 import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from "react"
 import { DefaultLayout, LinkComponent } from "../interface"
-import Router from 'next/router' 
 import api from "@/services/api"
+import { useRouter } from 'next/router' 
 
 interface Target extends EventTarget {
   username: { value: string }
@@ -19,14 +19,15 @@ interface IError {
 
 const Login: React.FC = () => {
 
+  const router = useRouter()
   const {data: session} = useSession()
   const toast = useToast()
 
   useEffect(() => {
     if (session) {
-      Router.push("/")
+      router.push("/")
     }
-  }, [session])
+  }, [session, router])
 
   const [isSending, setIsSending] = useState(false)
   const [globalError, setGlobalError] = useState<string | null>(null)
@@ -57,8 +58,8 @@ const Login: React.FC = () => {
       duration: 4000,
       isClosable: true,
     })
-    
-    Router.push("/login")
+
+    router.push("/login")
     setIsSending(false)
     
   }

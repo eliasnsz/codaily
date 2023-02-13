@@ -2,7 +2,7 @@ import { Box, Button, Flex, FormLabel, Heading, Input, Stack, Text } from "@chak
 import { signIn, useSession } from "next-auth/react"
 import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from "react"
 import { DefaultLayout, LinkComponent } from "../interface"
-import Router from 'next/router' 
+import { useRouter } from 'next/router' 
 
 interface Target extends EventTarget {
   username: { value: string }
@@ -15,13 +15,14 @@ interface LoginResponse {
 
 const Login: React.FC = () => {
 
+  const router = useRouter()
   const {data: session} = useSession()
 
   useEffect(() => {
     if (session) {
-      Router.push("/")
+      router.push("/")
     }
-  }, [session])
+  }, [session, router])
 
   const [isSending, setIsSending] = useState(false)
   const [globalError, setGlobalError] = useState<string | null>(null)
@@ -43,7 +44,7 @@ const Login: React.FC = () => {
       return setIsSending(false)
     }
     
-    Router.push("/")
+    router.push("/")
     setIsSending(false)
   }
 
