@@ -7,10 +7,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { user } = req.query
   const db = await connectToDatabase()
   
+  //Se for post nao retorna o body, se for comentario sim.
   const posts = await db.collection<PostData>("posts")
-    .find({}, { projection: { children: 0, body: 0 }}).toArray()
+    .find({ title: {$type: "string"} }, { projection: { children: 0, body: 0 }}).toArray()
+
+  const comments = await db.collection<PostData>("posts")
+    .find({ title: {$type: "null"}, author: user }, { projection: { children: 0 }}).toArray()
     
-  const thisUser = await db.collection<UserData>("users")
+  const thisUser = await db.collection<PostData>("users")
     .findOne({ username: user })
 
   if (req.method === "GET") {
@@ -21,8 +25,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       )
     }
 
+    
     const thisUserPosts = posts.filter(post => post.author === user)
-    return res.status(200).json(thisUserPosts) 
+    const postsAndComments = [...thisUserPosts, ...comments]
+
+    return res.status(200).json(postsAndComments) 
   }
   
 }

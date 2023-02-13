@@ -8,13 +8,13 @@ interface IProps {
   content: WithId<PostData>[]
 }
 
-export default function Home() {
+export default function Home({ content }: IProps) {
 
-  // const post = content[0]
+  const post = content[0]
 
   return (
     <>
-      {/* <DefaultLayout title="Home">
+      <DefaultLayout title="Home">
         {
           content.map((post, index) => {
             return (
@@ -30,19 +30,20 @@ export default function Home() {
             )
           })
         }
-      </DefaultLayout> */}
+      </DefaultLayout>
     </>
   )
 }
 
-// export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 
-//   const response = await api.get<WithId<PostData>[]>("/contents")
-//   const content = response.data
+  const response = await api.get<WithId<PostData>[]>("/contents")
+  const content = response.data
 
-//   return {
-//     props: {
-//       content
-//     }
-//   }
-// }
+  return {
+    props: {
+      content
+    },
+    revalidate: 60
+  }
+}

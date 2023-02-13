@@ -46,6 +46,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       console.log(err);
     }
     
+    res.revalidate("/")
+    res.revalidate("/author")
+    
     return res.status(201).json(newPost)
   }
   
