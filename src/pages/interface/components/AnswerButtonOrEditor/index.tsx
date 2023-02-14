@@ -1,6 +1,6 @@
 import api from "@/services/api";
 import { ISession, PostData } from "@/types";
-import { Box, Button, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { WithId } from "mongodb";
 import { useSession } from "next-auth/react";
 import { FormEvent, useEffect, useState } from "react";
@@ -9,16 +9,19 @@ import Comments, { CommentContainer } from "../Comments";
 import Viewer, { Editor } from "../Markdown";
 
 interface IProps {
-  post: WithId<PostData>
+  post: WithId<PostData>,
+  parentAuthor?: string,
+  parentSlug?: string
 }
 
-export default function AnswerButtonOrEditor({ post }: IProps) {
+export default function AnswerButtonOrEditor({ post, parentAuthor, parentSlug }: IProps) {
 
   const { data } = useSession() 
   const session = data as ISession
 
-  const [state, setState] = useState<null|"editing"|"published">(null)
-  const [globalError, setGlobalError] = useState<null|string>(null)
+  const [newComment, setNewComment] = useState<WithId<PostData> | null>(null)
+  const [state, setState] = useState<null | "editing" | "published">(null)
+  const [globalError, setGlobalError] = useState<null | string>(null)
   const [isSending, setIsSending] = useState(false) 
   const [body, setBody] = useState("")
 
@@ -30,16 +33,25 @@ export default function AnswerButtonOrEditor({ post }: IProps) {
     e.preventDefault()
     setIsSending(true)
 
+    console.log(parentAuthor, parentSlug);
+    
+    const url = !(parentAuthor && parentSlug) ?
+      `/contents/${post.author}/${post.slug}` :
+      `/contents/${parentAuthor}/${parentSlug}`
+
     try {
-      const response = await api.post(`/contents/${post.author}/${post.slug}`, { 
-        body, author: session.user?.username 
-      })
-      console.log(response);
       
+      const response = await api.post(url, { 
+          body, author: session.user?.username 
+        })
+      setNewComment(response.data)
+
     } catch (error: any) {
+
       const { message } = error.response.data
       setGlobalError(message)
     }
+
     setState("published")
     setIsSending(false)
   }
@@ -75,9 +87,19 @@ export default function AnswerButtonOrEditor({ post }: IProps) {
 
   if (state === "published") {
     return (
-      <Box w="100%" py={6}>
-        <CommentContainer post={post} />
-      </Box>
+      <Flex 
+        borderRadius="lg"
+        border="1px solid #62356955" 
+        my={6}
+        align="center"
+        w="100%"
+        px={6}
+      >
+        <Box py={4} px={2}>
+          <AuthorTag post={newComment as WithId<PostData>}/>
+          <Viewer value={body}  />
+        </Box>
+      </Flex>
     )
   }
   

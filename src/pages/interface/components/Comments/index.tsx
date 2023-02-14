@@ -21,7 +21,12 @@ export default function Comments({ comments }: IProps) {
               {
                 comment.children.map(child => {
                   return (
-                    <CommentContainer key={child._id.toString()} post={child}/>
+                    <CommentContainer 
+                      parentAuthor={comment.author} 
+                      parentSlug={comment.slug} 
+                      key={child._id.toString()} 
+                      post={child}
+                    />
                   )
                 }).reverse()
               }
@@ -36,9 +41,11 @@ export default function Comments({ comments }: IProps) {
 interface ICommentProps {
   post: WithId<PostData>,
   children?: ReactNode
+  parentAuthor?: string,
+  parentSlug?: string
 }
 
-export function CommentContainer({ post, children }: ICommentProps) {
+export function CommentContainer({ post, parentAuthor, parentSlug, children }: ICommentProps) {
   return (
     <Stack mt={6} direction="row" spacing={6} px={2}>
       <Box borderRight="1px dotted #62356955" w="1px"/>
@@ -53,6 +60,8 @@ export function CommentContainer({ post, children }: ICommentProps) {
         </Box>
         <AnswerButtonOrEditor 
           post={post}
+          parentAuthor={parentAuthor as string}
+          parentSlug={parentSlug as string}
         />
         {children}
       </Box>

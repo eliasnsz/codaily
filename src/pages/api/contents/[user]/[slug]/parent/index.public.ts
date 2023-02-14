@@ -27,9 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   if (req.method === "GET") {
     if (!parentPost) {
-      return res.status(404).send(new NotFoundError(
-        "Não há conteúdos acima desse"
-      ))
+      return res.status(200).json(null)
     }
     
     return res.status(200).send(parentPost)

@@ -1,6 +1,7 @@
-import { Box, Flex, IconButton, Image, Link as ChakraLink, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text } from "@chakra-ui/react"
+import { Box, Flex, IconButton, Image, Link as ChakraLink, Menu, Icon, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text } from "@chakra-ui/react"
 import { signOut, useSession } from "next-auth/react"
 import { FaUserAlt } from "react-icons/fa"
+import { MdOutlineHome } from "react-icons/md"
 
 import Link from "next/link"
 import { ISession } from "@/types"
@@ -65,17 +66,15 @@ function UserProfile({ session }: IProps) {
         icon={<FaUserAlt/ >}
       />
       <MenuList p={2}>
-        <MenuItem borderRadius="md">
+        <MenuItem alignItems="center" gap={1} borderRadius="md" as={Link} href={`/${session.user?.username}`}>
+          <Icon as={MdOutlineHome} boxSize={5}/>
           {session.user?.username}
         </MenuItem>
-        <MenuDivider mx={-2} />
+        <MenuDivider mx={-2}/>
         <MenuItem borderRadius="md" as={Link} href="/publicar">
           Publicar novo conteúdo
         </MenuItem>
-        <MenuItem borderRadius="md">
-          Editar perfil
-        </MenuItem>
-        <MenuDivider mx={-2} />
+        <MenuDivider mx={-2}/>
         <MenuItem onClick={() => signOut()} borderRadius="md" color="red.500">
           Deslogar
         </MenuItem>
