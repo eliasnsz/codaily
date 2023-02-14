@@ -23,11 +23,11 @@ export default function Comments({ comments }: IProps) {
                   return (
                     <CommentContainer key={child._id.toString()} post={child}/>
                   )
-                })
+                }).reverse()
               }
             </CommentContainer>
           )
-        })
+        }).reverse()
       }
     </>
   )
@@ -38,7 +38,7 @@ interface ICommentProps {
   children?: ReactNode
 }
 
-function CommentContainer({ post, children }: ICommentProps) {
+export function CommentContainer({ post, children }: ICommentProps) {
   return (
     <Stack mt={6} direction="row" spacing={6} px={2}>
       <Box borderRight="1px dotted #62356955" w="1px"/>
