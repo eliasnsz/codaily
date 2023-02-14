@@ -79,6 +79,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await Promise.all([
       res.revalidate("/"),
       res.revalidate(`/${author}/${thisPost?.slug}`),
+      res.revalidate(`/${author}/${newComment?.slug}`),
       res.revalidate(`/${author}`)
     ])
 
