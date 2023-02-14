@@ -11,6 +11,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const db = await connectToDatabase()
   const { user, slug } = req.query
   const postsCol = db.collection("posts")
+  
   const thisUser = await db.collection("users").findOne({ username: user })
   const thisPost = await postsCol
     .findOne({ slug: slug, author: user }, { projection: { children: 0 } })

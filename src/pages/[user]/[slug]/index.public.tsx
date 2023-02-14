@@ -1,5 +1,5 @@
 import { Box, Divider, Flex, Heading, Stack, Text, Icon, Center, Button } from "@chakra-ui/react";
-import { AuthorTag, Comments, DefaultLayout, LinkComponent, Viewer } from "@/pages/interface";
+import { AnswerButtonOrEditor, AuthorTag, Comments, DefaultLayout, LinkComponent, Viewer } from "@/pages/interface";
 import { FaRegCommentAlt } from "react-icons/fa"
 import { ParsedUrlQuery } from "querystring";
 import { GetStaticProps } from "next/types"
@@ -59,10 +59,11 @@ export default function Post({ post, children, parent }: IProps) {
         my={6}
         align="center"
         minH="70px"
+        px={6}
       >
-        <Button variant="outline" borderColor="#62356955" ml={8} size="sm">
-          Responder
-        </Button>
+        <AnswerButtonOrEditor 
+          post={post}
+        />
       </Flex>
       <Comments comments={children}/>
     </DefaultLayout>

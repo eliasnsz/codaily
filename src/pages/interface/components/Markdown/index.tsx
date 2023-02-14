@@ -18,7 +18,7 @@ import gfm from "@bytemd/plugin-gfm"
 
 import "highlight.js/styles/github.css"
 import "bytemd/dist/index.min.css"
-import "github-markdown-css"
+import 'github-markdown-css/github-markdown-light.css';
 
 const plugins = [
   gfm({ locale: gfmLocale }),
