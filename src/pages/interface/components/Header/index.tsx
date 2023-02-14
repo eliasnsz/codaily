@@ -17,7 +17,7 @@ const Header: React.FC = () => {
       >
         <Flex 
           justify="space-between"
-          px={4}
+          pr={4}
           align="center"
         >
           <Link href="/">

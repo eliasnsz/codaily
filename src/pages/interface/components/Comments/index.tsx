@@ -28,7 +28,7 @@ export default function Comments({ comments }: IProps) {
                       post={child}
                     />
                   )
-                }).reverse()
+                })
               }
             </CommentContainer>
           )

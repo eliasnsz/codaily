@@ -80,6 +80,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       res.revalidate("/"),
       res.revalidate(`/${author}/${thisPost?.slug}`),
       res.revalidate(`/${author}/${newComment?.slug}`),
+      res.revalidate(`/${user}/${slug}`),
       res.revalidate(`/${author}`)
     ])
 

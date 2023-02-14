@@ -108,7 +108,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         children,
         parent
       },
-      revalidate: 60
+      revalidate: 10
     }
     
   } catch (error) {
