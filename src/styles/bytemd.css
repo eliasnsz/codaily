@@ -18,3 +18,7 @@
 .bytemd-fullscreen {
   z-index: 100;
 }
+
+.markdown-body {
+  background-color: #fff;
+}
