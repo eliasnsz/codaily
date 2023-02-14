@@ -4,6 +4,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { NotFoundError } from "@/errors";
 import { PostData } from "@/types";
 import { v4 } from 'uuid'
+import api from "@/services/api";
+import { ObjectId, WithId } from "mongodb";
 
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -13,9 +15,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const postsCol = db.collection("posts")
   
   const thisUser = await db.collection("users").findOne({ username: user })
-  const thisPost = await postsCol
-    .findOne({ slug: slug, author: user }, { projection: { children: 0 } })
+  const thisPost = await postsCol.findOne<WithId<PostData>>(
+    { slug: slug, author: user }, { projection: { children: 0 } }
+  )
 
+  // const parentPost = await postsCol.findOne<WithId<PostData>>(
+  //   { _id: new ObjectId(thisPost?.parent_id as string)}
+  // )
+  // console.log(parentPost)
+    
   if (req.method === "GET") {
     if (!thisUser) {
       return res.status(404).send( 
@@ -68,8 +76,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).send(error)
     }
 
-    res.revalidate("/")
-    res.revalidate("/author")
+    await Promise.all([
+      res.revalidate("/"),
+      res.revalidate(`/${author}/${newComment.slug}`),
+      res.revalidate(`/${author}`)
+    ])
 
     return res.status(200).json(newComment)
   }
