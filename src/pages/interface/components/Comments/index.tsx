@@ -1,13 +1,17 @@
-import { PostData } from "@/types";
-import { Box, Button, Stack } from "@chakra-ui/react";
+import { ISession, PostData } from "@/types";
+import { Box, Button, Flex, Stack } from "@chakra-ui/react";
 import { WithId } from "mongodb";
+import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
 import AnswerButtonOrEditor from "../AnswerButtonOrEditor";
 import AuthorTag from "../AuthorTag";
 import Viewer from "../Markdown";
+import OptionsButton from "../OptionsButton";
 
 interface IProps {
-  comments: WithId<PostData>[]
+  comments: WithId<PostData>[],
+  subCommentAuthor?: string
+  subCommentSlug?: string
 }
 
 export default function Comments({ comments }: IProps) {
@@ -22,13 +26,13 @@ export default function Comments({ comments }: IProps) {
                 comment.children.map(child => {
                   return (
                     <CommentContainer 
-                      parentAuthor={comment.author} 
-                      parentSlug={comment.slug} 
+                      subCommentAuthor={comment.author}
+                      subCommentSlug={comment.slug}
                       key={child._id.toString()} 
                       post={child}
                     />
                   )
-                }).reverse()
+                })
               }
             </CommentContainer>
           )
@@ -40,28 +44,38 @@ export default function Comments({ comments }: IProps) {
 
 interface ICommentProps {
   post: WithId<PostData>,
-  children?: ReactNode
-  parentAuthor?: string,
-  parentSlug?: string
+  children?: ReactNode,
+  subCommentAuthor?: string,
+  subCommentSlug?: string
 }
 
-export function CommentContainer({ post, parentAuthor, parentSlug, children }: ICommentProps) {
+export function CommentContainer({ post, children, subCommentAuthor, subCommentSlug }: ICommentProps) {
+
+  const { data } = useSession()
+  const session = data as ISession
+  
   return (
     <Stack mt={6} direction="row" spacing={6} px={2}>
       <Box borderRight="1px dotted #62356955" w="1px"/>
       <Box w="100%">
-        <AuthorTag
-          post={post}
-        />
+        <Flex w="100%" align="center" justify="space-between">
+          <AuthorTag
+            post={post}
+          />
+          {
+            post.author === session?.user?.username && 
+            <OptionsButton post={post}/>
+          }
+        </Flex>
         <Box mt={2} mb={3}>
           <Viewer
             value={post.body}
           />
         </Box>
-        <AnswerButtonOrEditor 
+        <AnswerButtonOrEditor
+          subCommentAuthor={subCommentAuthor}
+          subCommentSlug={subCommentSlug}
           post={post}
-          parentAuthor={parentAuthor as string}
-          parentSlug={parentSlug as string}
         />
         {children}
       </Box>

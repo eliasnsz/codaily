@@ -17,9 +17,10 @@ export interface PostData {
   publishedAt: string,
   updatedAt: string,
   parent_id: string | null,
-  owner_id: string,
+  author_id: string,
   children: WithId<PostData>[] | [],
   children_deep_count: number
+  root_slug: string | null
 }
 
 export interface ISession extends Session {

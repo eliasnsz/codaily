@@ -3,6 +3,7 @@ import { ISession, PostData } from "@/types";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { WithId } from "mongodb";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/dist/client/router";
 import { FormEvent, useEffect, useState } from "react";
 import AuthorTag from "../AuthorTag";
 import Comments, { CommentContainer } from "../Comments";
@@ -10,14 +11,15 @@ import Viewer, { Editor } from "../Markdown";
 
 interface IProps {
   post: WithId<PostData>,
-  parentAuthor?: string,
-  parentSlug?: string
+  subCommentAuthor?: string
+  subCommentSlug?: string
 }
 
-export default function AnswerButtonOrEditor({ post, parentAuthor, parentSlug }: IProps) {
+export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommentSlug }: IProps) {
 
   const { data } = useSession() 
   const session = data as ISession
+  const router = useRouter()
 
   const [newComment, setNewComment] = useState<WithId<PostData> | null>(null)
   const [state, setState] = useState<null | "editing" | "published">(null)
@@ -33,11 +35,10 @@ export default function AnswerButtonOrEditor({ post, parentAuthor, parentSlug }:
     e.preventDefault()
     setIsSending(true)
 
-    console.log(parentAuthor, parentSlug);
     
-    const url = !(parentAuthor && parentSlug) ?
-      `/contents/${post.author}/${post.slug}` :
-      `/contents/${parentAuthor}/${parentSlug}`
+    const url = !(subCommentAuthor && subCommentSlug) 
+    ? `/contents/${post.author}/${post.slug}` 
+    : `/contents/${subCommentAuthor}/${subCommentSlug}` 
 
     try {
       
@@ -57,6 +58,9 @@ export default function AnswerButtonOrEditor({ post, parentAuthor, parentSlug }:
   }
 
   if (state === "editing") {
+      if (!session) {
+        router.push("/login")
+      }
     return (
       <Box w="100%" py={6}>
         <Editor value={body} changeValue={(e: string) => setBody(e)}/>

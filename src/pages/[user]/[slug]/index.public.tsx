@@ -1,13 +1,16 @@
-import { Box, Divider, Flex, Heading, Stack, Text, Icon, Center, Button } from "@chakra-ui/react";
-import { AnswerButtonOrEditor, AuthorTag, Comments, DefaultLayout, LinkComponent, Viewer } from "@/pages/interface";
+import { Box, Divider, Flex, Heading, Stack, Text, Icon, Center, Button, Menu, MenuButton, MenuItem, MenuList, IconButton } from "@chakra-ui/react";
+import { AnswerButtonOrEditor, AuthorTag, Comments, DefaultLayout, LinkComponent, OptionsButton, Viewer } from "@/pages/interface";
 import { FaRegCommentAlt } from "react-icons/fa"
+import { BsTrashFill } from "react-icons/bs"
+import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import { ParsedUrlQuery } from "querystring";
 import { GetStaticProps } from "next/types"
 import { GetStaticPaths } from "next"
-import { PostData } from "@/types";
+import { ISession, PostData } from "@/types";
 import { WithId } from "mongodb";
 
 import api from "@/services/api";
+import { useSession } from "next-auth/react";
 
 interface IProps {
   post: WithId<PostData>
@@ -17,12 +20,14 @@ interface IProps {
 
 export default function Post({ post, children, parent }: IProps) {
 
+  const { data } = useSession()
+  const session = data as ISession
 
   return (
     <DefaultLayout title={post.title || post.body}>
       <Stack direction="row" spacing={6} px={2}>
         <Box borderRight="1px dotted #62356955" w="1px"/>
-        <Box>
+        <Box w="100%">
           {
             !post.title &&
             <Stack direction="row" mb={4} align="center">
@@ -37,9 +42,16 @@ export default function Post({ post, children, parent }: IProps) {
               </Text>
             </Stack>
           }
-          <AuthorTag
-            post={post}
-          />
+          <Flex align="center" justify="space-between" w="100%">
+            <AuthorTag
+              post={post}
+            />
+            {
+              post.author === session?.user?.username && 
+              <OptionsButton post={post}/>
+            }
+          </Flex>
+          
           {
             post.title &&
             <Heading my={2} fontSize="2em" fontWeight={500}>
@@ -108,7 +120,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         children,
         parent
       },
-      revalidate: 60
+      revalidate: 10
     }
     
   } catch (error) {

@@ -1,55 +1,29 @@
 import { postValidation } from "@/services/postValidation";
-import { connectToDatabase } from "@/services/database";
 import { NextApiRequest, NextApiResponse } from "next";
-import { PostData } from "@/types";
-import slugify from "slugify"
+import { createNewPost, findAllPosts } from "@/models/contents";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   
-  const db = await connectToDatabase()
-  const postsCol = db.collection<PostData>("posts")
-  //Procurar todos os posts e remover o body e o array de comentarios
-  const allPosts = await postsCol.find({ title: { $type: "string" }}, 
-    { projection: { body: 0, children: 0 }}).toArray()  
-
   if (req.method === "GET") {
+    const allPosts = await findAllPosts({})
+
     return res.status(200).json(allPosts)
   }
+
   if (req.method === "POST") {
 
     const { title, body, author, author_id } = req.body
 
+    //Post Validation
     const error = await postValidation(body, title)
+    if (error) return res.status(error.status).send(error)
 
-    if (error) {
-      return res.status(error.status).send(error)
-    }
-
-    const slugConfig = { lower: true, strict: true }
-
-    const newPost: PostData = {
-      title: title,
-      body: body,
-      author: author,
-      owner_id: author_id,
-      parent_id: null,
-      publishedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      children: [],
-      children_deep_count: 0,
-      slug: slugify(title as string, slugConfig),
-    }
-
-    try {
-      await postsCol.insertOne(newPost)
-    } catch (err) {
-      console.log(err);
-    }
+    const newPost = await createNewPost({ title, body, author, author_id })    
     
     await Promise.all([
+      res.revalidate(`/${newPost.author}/${newPost.slug}`),
+      res.revalidate(`/${newPost.author}`),
       res.revalidate("/"),
-      res.revalidate(`/${author}/${newPost.slug}`),
-      res.revalidate(`/${author}`)
     ])
     
     return res.status(201).json(newPost)

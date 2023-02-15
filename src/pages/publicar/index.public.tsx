@@ -15,7 +15,7 @@ export default function Publicar() {
   useEffect(() => {
     if (status !== "loading") {
       if (!session) {
-        router.push("/")
+        router.push("/login")
       }
     }
   }, [session, router, status])

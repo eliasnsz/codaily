@@ -2,17 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "@/services/database";
 import { PostData, UserData } from "@/types";
 import { NotFoundError } from "@/errors";
+import { findAllUserContent } from "@/models/contents";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { user } = req.query
   const db = await connectToDatabase()
   
-  //Se for post nao retorna o body, se for comentario sim.
-  const posts = await db.collection<PostData>("posts")
-    .find({ title: {$type: "string"} }, { projection: { children: 0, body: 0 }}).toArray()
-
-  const comments = await db.collection<PostData>("posts")
-    .find({ title: {$type: "null"}, author: user }, { projection: { children: 0 }}).toArray()
+  const allUserContent = await findAllUserContent(user as string)
     
   const thisUser = await db.collection<PostData>("users")
     .findOne({ username: user })
@@ -24,12 +20,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         new NotFoundError("Usuário não encontrado no sistema")
       )
     }
+    if (!allUserContent.length) {
+      return res.status(404).send(
+        new NotFoundError("O usuário ainda não tem nenhum conteúdo publicado")
+      )
+    }
 
-    
-    const thisUserPosts = posts.filter(post => post.author === user)
-    const postsAndComments = [...thisUserPosts, ...comments]
-
-    return res.status(200).json(postsAndComments) 
+    return res.status(200).json(allUserContent) 
   }
   
 }

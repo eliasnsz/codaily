@@ -13,16 +13,16 @@ const Header: React.FC = () => {
     <>
       <Box 
         backgroundColor="#321B36" 
-        h="80px"
+        h="70px"
       >
         <Flex 
           justify="space-between"
-          px={4}
+          pr={4}
           align="center"
         >
           <Link href="/">
             <Image
-              h="80px"
+              h="70px"
               src="https://i.imgur.com/RA1JDy0.png"
               alt="logo-codaily"
             />
