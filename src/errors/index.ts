@@ -26,7 +26,7 @@ export class ValidationError extends BaseError {
   
   constructor({ message, statusCode }: { message: string, statusCode?: number }) {
     super({ 
-      message: message || 'Um erro de validação ocorreu .',
+      message: message || 'Um erro de validação ocorreu.',
       statusCode: statusCode || 400,
     });
   }
