@@ -5,6 +5,7 @@ import { WithId } from "mongodb";
 import { BsTrashFill } from "react-icons/bs";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useRouter } from "next/router"
+import { useState } from "react";
 
 interface IProps {
   post: WithId<PostData>
@@ -14,10 +15,14 @@ export default function OptionsButton({ post }: IProps) {
 
   const router = useRouter()
 
+  const [isDeleted, setIsDeleted] = useState(false)
+
   async function handleDelete() {
-    await api.delete(`/contents/${post.author}/${post.slug}`)
-    router.push("/")
-    return
+    await api.delete(`/contents`, { data: { slug: post.slug }})
+    if (post.title) {
+      return router.push("/")
+    }
+    return router.reload()
   }
   
   return (

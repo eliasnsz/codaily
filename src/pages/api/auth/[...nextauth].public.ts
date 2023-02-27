@@ -45,12 +45,17 @@ export const authOptions: AuthOptions = {
         const userFinded = await db.collection<UserData>("users")
           .findOne({ username: username })
 
-        if (!userFinded) throw new NotFoundError("Usuário inexistente")
+        if (!userFinded) throw new NotFoundError({
+          message: "Usuário inexistente"
+        })
 
         const isCorrectPass = bcrypt
           .compareSync(password, userFinded.password as string)
 
-        if (!isCorrectPass) throw new ValidationError("Senha incorreta", 401)
+        if (!isCorrectPass) throw new ValidationError({
+          message:"Senha incorreta", 
+          statusCode: 401
+        })
         
         return userFinded as any
       }

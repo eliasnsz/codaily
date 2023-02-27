@@ -1,3 +1,4 @@
+import { HttpStatusCode } from "axios"
 import { WithId } from "mongodb"
 import { Session } from "next-auth"
 
@@ -14,13 +15,11 @@ export interface PostData {
   body: string,
   author: string,
   slug: string,
-  publishedAt: string,
-  updatedAt: string,
+  published_at: string,
+  updated_at: string,
   parent_id: string | null,
   author_id: string,
-  children: WithId<PostData>[] | [],
   children_deep_count: number
-  root_slug: string | null
 }
 
 export interface ISession extends Session {
@@ -32,4 +31,10 @@ export interface ISession extends Session {
     updatedAt?: string,
   },
   expires: string
+}
+
+export interface IBaseError extends Error {
+  name: string,
+  message: string,
+  statusCode: HttpStatusCode
 }

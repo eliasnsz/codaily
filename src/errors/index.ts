@@ -1,35 +1,43 @@
-export class BaseError {
-  name: string;
-  message: string;
-  status: number;
+import { HttpStatusCode } from "axios";
 
-  constructor(name: string, message: string, status: number) {
-    this.name = name,
-    this.message = message,
-    this.status = status
+export class BaseError extends Error {
+  message: string;
+  statusCode: HttpStatusCode;
+
+  constructor({ message, statusCode }: { message: string, statusCode?: HttpStatusCode }) {
+    super();
+    this.name = this.constructor.name;
+    this.message = message;
+    this.statusCode = statusCode || 500;
   }
 }
 
-export class ValidationError {
-  name: string;
-  message: string;
-  status: number;
-
-  constructor(message: string, status: number) {
-    this.name = "ValidationError",
-    this.message = message,
-    this.status = status
+export class NotFoundError extends BaseError {
+  
+  constructor({ message }: { message: string }) {
+    super({ 
+      message: message || 'Não foi possível encontrar este recurso no sistema.',
+      statusCode: 404,
+    });
   }
 }
 
-export class NotFoundError {
-  name: string;
-  message: string;
-  status: number;
-
-  constructor(message: string) {
-    this.name = "NotFoundError",
-    this.message = message,
-    this.status = 404
+export class ValidationError extends BaseError {
+  
+  constructor({ message, statusCode }: { message: string, statusCode?: number }) {
+    super({ 
+      message: message || 'Um erro de validação ocorreu .',
+      statusCode: statusCode || 400,
+    });
   }
 }
+
+export class UnauthorizedError extends BaseError {
+  
+  constructor({ message }: { message: string }) {
+    super({ 
+      message: message || 'Usuário não autenticado.',
+      statusCode: 401,
+    });
+  }
+} 

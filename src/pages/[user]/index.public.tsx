@@ -28,7 +28,7 @@ export default function User({ user, userContent }: IProps) {
               key={item._id.toString()}
               author={item.author}
               comments={item.children_deep_count}
-              publishedAt={item.publishedAt}
+              publishedAt={item.published_at}
               slug={item.slug}
               title={item.title}
               body={item.body}
@@ -60,24 +60,12 @@ interface IParams extends ParsedUrlQuery {
 
 export const getStaticProps: GetStaticProps = async (context) => {
 
-  try {
     const { user } = context.params as IParams
     const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
     const userContent = response.data
     
-    return {
-      props: { user, userContent },
-      revalidate: 10
-    }
-
-  } catch (error) {
-
-    return {
-      props: {},
-      redirect: {
-        destination: "/404",
-        permanent: false
-      },
-    }
+  return {
+    props: { user, userContent },
+    revalidate: 10
   }
 }

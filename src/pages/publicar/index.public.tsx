@@ -4,7 +4,8 @@ import { DefaultLayout, Editor } from "../interface";
 import { useRouter } from "next/router"
 import api from "@/services/api";
 import { useSession } from "next-auth/react";
-import { ISession, PostData } from "@/types";
+import { IBaseError, ISession, PostData, UserData } from "@/types";
+import { BaseError } from "@/errors";
 
 export default function Publicar() {
   const router = useRouter()
@@ -34,7 +35,13 @@ export default function Publicar() {
     setIsSending(true)
 
     try {
-      const response = await api.post("/contents", { title, body, author: session?.user?.username})
+      const response = await api.post("/contents", 
+      { 
+        title, 
+        body, 
+        author: session?.user?.username,
+        author_id: session?.user?.id
+      })
       const post: PostData = response.data
       router.push(`/${post.author}/${post.slug}`)
       

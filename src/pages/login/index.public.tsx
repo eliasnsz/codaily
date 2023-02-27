@@ -3,6 +3,9 @@ import { signIn, useSession } from "next-auth/react"
 import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from "react"
 import { DefaultLayout, LinkComponent } from "../interface"
 import { useRouter } from 'next/router' 
+import api from "@/services/api"
+import { BaseError } from "@/errors"
+import { IBaseError } from "@/types"
 
 interface Target extends EventTarget {
   username: { value: string }
@@ -29,7 +32,7 @@ const Login: React.FC = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    setIsSending(true)
+    setIsSending(true)   
 
     const eventTarget = e.target as Target
     const username = eventTarget.username.value

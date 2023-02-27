@@ -21,20 +21,7 @@ export default function Comments({ comments }: IProps) {
       {
         comments.map(comment => {
           return (
-            <CommentContainer key={comment._id.toString()} post={comment}>
-              {
-                comment.children.map(child => {
-                  return (
-                    <CommentContainer 
-                      subCommentAuthor={comment.author}
-                      subCommentSlug={comment.slug}
-                      key={child._id.toString()} 
-                      post={child}
-                    />
-                  )
-                })
-              }
-            </CommentContainer>
+            <CommentContainer key={comment._id.toString()} post={comment}/>
           )
         }).reverse()
       }
@@ -45,11 +32,9 @@ export default function Comments({ comments }: IProps) {
 interface ICommentProps {
   post: WithId<PostData>,
   children?: ReactNode,
-  subCommentAuthor?: string,
-  subCommentSlug?: string
 }
 
-export function CommentContainer({ post, children, subCommentAuthor, subCommentSlug }: ICommentProps) {
+export function CommentContainer({ post, children }: ICommentProps) {
 
   const { data } = useSession()
   const session = data as ISession
@@ -72,12 +57,6 @@ export function CommentContainer({ post, children, subCommentAuthor, subCommentS
             value={post.body}
           />
         </Box>
-        <AnswerButtonOrEditor
-          subCommentAuthor={subCommentAuthor}
-          subCommentSlug={subCommentSlug}
-          post={post}
-        />
-        {children}
       </Box>
     </Stack>
   )

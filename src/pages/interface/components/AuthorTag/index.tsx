@@ -18,7 +18,7 @@ export default function AuthorTag({ post }: IProps) {
         </LinkComponent>
       </Tag>
       <Text fontSize="xs" color="gray.500">
-        {moment(post.publishedAt).fromNow()}
+        {moment(post.published_at).fromNow()}
       </Text>
     </Flex>
   )

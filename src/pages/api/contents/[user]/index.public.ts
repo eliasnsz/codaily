@@ -1,34 +1,26 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "@/services/database";
-import { PostData, UserData } from "@/types";
-import { NotFoundError } from "@/errors";
-import { findAllUserContent } from "@/models/contents";
+import { findAllUserContent, findUser } from '@/controllers'
+import { NotFoundError } from '@/errors'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { user } = req.query
-  const db = await connectToDatabase()
-  
-  const allUserContent = await findAllUserContent(user as string)
-    
-  const thisUser = await db.collection<PostData>("users")
-    .findOne({ username: user })
 
-  if (req.method === "GET") {
-    
-    if (!thisUser) {
-      return res.status(404).send(
-        new NotFoundError("Usuário não encontrado no sistema")
-      )
-    }
-    if (!allUserContent.length) {
-      return res.status(404).send(
-        new NotFoundError("O usuário ainda não tem nenhum conteúdo publicado")
-      )
-    }
+export default async function handler (req: NextApiRequest, res: NextApiResponse) {
 
-    return res.status(200).json(allUserContent) 
+  const { user: username } = req.query
+
+  const userFinded = await findUser(
+    { username },
+    { projection: { password: 0 } }
+  )  
+
+  if (!userFinded) {
+    const error = new NotFoundError({ 
+      message: "Usuário não encontrado no sistema"
+    })
+      
+    throw res.status(error.statusCode).json(error)
   }
-  
-}
 
-export default handler
+  const userContent = await findAllUserContent(userFinded.username)
+
+  return res.status(200).json(userContent)
+}

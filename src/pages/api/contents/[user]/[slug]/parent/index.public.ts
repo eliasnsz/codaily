@@ -1,35 +1,23 @@
-import { NotFoundError } from "@/errors";
-import { findOne, findParent } from "@/models/contents";
-import { connectToDatabase } from "@/services/database";
-import { PostData, UserData } from "@/types";
-import { ObjectId } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
+import { findAllUserContent, findOneContent, findParentContent, findRootContent, findUser } from '@/controllers'
+import { NotFoundError } from '@/errors'
+import { PostData } from '@/types'
+import { ObjectId } from 'mongodb'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-  const { user, slug } = req.query
+export default async function handler (req: NextApiRequest, res: NextApiResponse) {
 
-  const db = await connectToDatabase()
-  const userFinded = await db.collection<UserData>("users").findOne({ username: user })
-  
-  const thisPost = await findOne({ slug: slug })
-  const parentPost = await findParent({ 
-    _id: new ObjectId(thisPost?.parent_id as string) 
-  })
+  const { slug } = req.query
 
-  if (!userFinded) return res.status(404).send(new NotFoundError(
-    "Usuário não encontrado no sistema"
-  ))
-  if (!thisPost) return res.status(404).send(new NotFoundError(
-    "O conteúdo informado não foi encontrado no sistema"
-  ))
+  const thisPost = await findOneContent({ slug: slug })
+  const parent = await findOneContent(
+    { _id: new ObjectId(thisPost?.parent_id as string) },
+    {   
+      projection: {
+        children: 0
+      }
+    } 
+  )
 
-  if (req.method === "GET") {
-    if (!parentPost) return res.status(200).json(null)
-    
-    return res.status(200).json(parentPost)
-  }
-  
+  return res.status(200).json(parent)
 }
-
-export default handler

@@ -35,15 +35,12 @@ export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommen
     e.preventDefault()
     setIsSending(true)
 
-    
-    const url = !(subCommentAuthor && subCommentSlug) 
-    ? `/contents/${post.author}/${post.slug}` 
-    : `/contents/${subCommentAuthor}/${subCommentSlug}` 
-
     try {
-      
-      const response = await api.post(url, { 
-          body, author: session.user?.username 
+      const response = await api.post("/contents", { 
+          body, 
+          author: session.user?.username,
+          author_id: session.user?.id,
+          parent_id: post._id.toString()
         })
       setNewComment(response.data)
 

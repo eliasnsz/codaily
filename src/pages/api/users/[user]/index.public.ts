@@ -1,3 +1,4 @@
+import { findUser } from "@/controllers";
 import { NotFoundError } from "@/errors";
 import { connectToDatabase } from "@/services/database";
 import { UserData } from "@/types";
@@ -8,14 +9,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { user } = req.query
   
   if (req.method === "GET") {
-    //Retorna o usuario sem a senha
-    const thisUser = await db.collection<UserData>("users")
-      .findOne({ username: user }, { projection: { password: 0, email: 0 }})
+
+    const thisUser = await findUser({ username: user }, {
+      projection: {
+        password: 0,
+        email: 0
+      }
+    })
 
     if (!thisUser) {
-      return res.status(404).send( 
-        new NotFoundError("Usuário não encontrado no sistema")
-      )
+      const error = new NotFoundError({
+        message: "Usuário não encontrado"
+      })
+
+      return res.status(error.statusCode).json(error)
     }
 
     return res.status(200).json(thisUser)

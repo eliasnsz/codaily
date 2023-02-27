@@ -25,7 +25,7 @@ export default function Home({ content }: IProps) {
                 author={post.author}
                 comments={post.children_deep_count}
                 slug={post.slug}
-                publishedAt={post.publishedAt}
+                publishedAt={post.published_at}
               />
             )
           })
