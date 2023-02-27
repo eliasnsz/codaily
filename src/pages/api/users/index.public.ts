@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const error = await registerValidate({ username, email, password }, db)
     
     if (error) {
-      return res.status(error.statusCode).send(error)
+      return res.status(error.statusCode).json(error)
     }
 
     const salt = genSaltSync(10)

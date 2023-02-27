@@ -3,8 +3,11 @@ import { PostData, UserData } from "@/types"
 import { Divider, Heading } from "@chakra-ui/react"
 import { WithId } from "mongodb"
 import { GetStaticPaths } from "next"
+import { useSession } from "next-auth/react"
+import Router from "next/router"
 import { GetStaticProps } from "next/types"
 import { ParsedUrlQuery } from "querystring"
+import { useEffect } from "react"
 import { DefaultLayout, PostAnchor } from "../interface"
 
 interface IProps {
@@ -13,6 +16,14 @@ interface IProps {
 }
 
 export default function User({ user, userContent }: IProps) {
+
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if (!session) {
+      Router.push("/login")
+    }
+  }, [session])
 
   return (
     <DefaultLayout title={user}>
