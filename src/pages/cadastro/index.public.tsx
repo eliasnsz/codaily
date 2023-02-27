@@ -4,6 +4,7 @@ import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from 
 import { DefaultLayout, LinkComponent } from "../interface"
 import api from "@/services/api"
 import { useRouter } from 'next/router' 
+import { ValidationError } from "@/errors"
 
 interface Target extends EventTarget {
   username: { value: string }
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
       const response = await api.post("/users", { username, email, password })
       
     } catch (err: any) {
-      const { name, message, status } = err.response.data
+      const { name, message, statusCode } = err.response.data as ValidationError
 
       setGlobalError(message)
       return setIsSending(false)
