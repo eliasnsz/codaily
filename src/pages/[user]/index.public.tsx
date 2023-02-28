@@ -1,14 +1,15 @@
-import api from "@/services/api"
-import { PostData, UserData } from "@/types"
 import { Center, Divider, Heading } from "@chakra-ui/react"
-import { WithId } from "mongodb"
+import { DefaultLayout, PostAnchor } from "../interface"
+import { PostData, UserData } from "@/types"
+import { ParsedUrlQuery } from "querystring"
+import { GetStaticProps } from "next/types"
 import { GetStaticPaths } from "next"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { GetStaticProps } from "next/types"
-import { ParsedUrlQuery } from "querystring"
 import { useEffect } from "react"
-import { DefaultLayout, PostAnchor } from "../interface"
+import { WithId } from "mongodb"
+
+import api from "@/services/api"
 
 interface IProps {
   user: string,
@@ -16,7 +17,7 @@ interface IProps {
 }
 
 export default function User({ user, userContent }: IProps) {
-
+  
   const { data: session, status } = useSession()
   const router = useRouter()
 
@@ -81,10 +82,16 @@ interface IParams extends ParsedUrlQuery {
 
 export const getStaticProps: GetStaticProps = async (context) => {
 
-    const { user } = context.params as IParams
-    const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
-    const userContent = response.data
-    
+  const { user } = context.params as IParams
+  const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
+  const userContent = response.data
+
+  if (!userContent || userContent.length === 0) {
+    return {
+      notFound: true,
+    }
+  }
+
   return {
     props: { user, userContent },
     revalidate: 10
