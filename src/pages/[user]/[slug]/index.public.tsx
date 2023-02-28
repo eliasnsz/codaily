@@ -11,6 +11,7 @@ import { WithId } from "mongodb";
 
 import api from "@/services/api";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 interface IProps {
   post: WithId<PostData>
@@ -22,6 +23,26 @@ export default function Post({ post, children, parent }: IProps) {
 
   const { data } = useSession()
   const session = data as ISession
+
+  const [isDeleted, setIsDeleted] = useState(false)
+
+  if (isDeleted) {
+    return (
+      <DefaultLayout title={post.title || post.body}>
+        <Stack direction="row" spacing={6} px={2}>
+          <Box borderRight="1px dotted #62356955" w="1px"/>
+          <Center 
+            w="100%" 
+            border="1px solid #62356955" 
+            py={6} 
+            borderRadius="lg"
+          >
+            Conteúdo apagado com sucesso.
+          </Center>
+        </Stack>
+      </DefaultLayout>
+    )
+  }
 
   return (
     <DefaultLayout title={post.title || post.body}>
@@ -48,7 +69,10 @@ export default function Post({ post, children, parent }: IProps) {
             />
             {
               post.author === session?.user?.username && 
-              <OptionsButton post={post}/>
+              <OptionsButton 
+                post={post}
+                setIsDeleted={setIsDeleted}
+              />
             }
           </Flex>
           
@@ -76,7 +100,7 @@ export default function Post({ post, children, parent }: IProps) {
           px={6}
         >
             <AnswerButtonOrEditor 
-            post={post}
+              post={post}
             />
         </Flex>
       }

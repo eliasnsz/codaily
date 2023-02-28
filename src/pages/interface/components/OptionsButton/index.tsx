@@ -5,24 +5,21 @@ import { WithId } from "mongodb";
 import { BsTrashFill } from "react-icons/bs";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useRouter } from "next/router"
-import { useState } from "react";
+import { Dispatch, DispatchWithoutAction, SetStateAction, useState } from "react";
 
 interface IProps {
   post: WithId<PostData>
+  setIsDeleted: Dispatch<SetStateAction<boolean>>
 }
 
-export default function OptionsButton({ post }: IProps) {
+export default function OptionsButton({ post, setIsDeleted }: IProps) {
 
   const router = useRouter()
 
-  const [isDeleted, setIsDeleted] = useState(false)
-
   async function handleDelete() {
     await api.delete(`/contents`, { data: { slug: post.slug }})
-    if (post.title) {
-      return router.push("/")
-    }
-    return router.reload()
+    setIsDeleted(true)
+    return
   }
   
   return (

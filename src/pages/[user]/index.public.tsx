@@ -1,6 +1,6 @@
 import api from "@/services/api"
 import { PostData, UserData } from "@/types"
-import { Divider, Heading } from "@chakra-ui/react"
+import { Center, Divider, Heading } from "@chakra-ui/react"
 import { WithId } from "mongodb"
 import { GetStaticPaths } from "next"
 import { useSession } from "next-auth/react"
@@ -35,6 +35,14 @@ export default function User({ user, userContent }: IProps) {
       </Heading>
       <Divider borderColor="#62356955" my={4} opacity={1}/>
       {
+        !userContent.length && 
+        <Center>
+          <Heading mt={6} fontWeight={600} fontSize="lg">
+            Nenhum conteúdo encontrado.
+          </Heading>
+        </Center>
+      }
+      {
         userContent.map((item, index) => {
           return (
             <PostAnchor
@@ -49,7 +57,6 @@ export default function User({ user, userContent }: IProps) {
             />
           )
         })
-
       }
     </DefaultLayout>
   )
