@@ -86,12 +86,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
   const userContent = response.data
 
-  if (!userContent || userContent.length === 0) {
-    return {
-      notFound: true,
-    }
-  }
-
   return {
     props: { user, userContent },
     revalidate: 10

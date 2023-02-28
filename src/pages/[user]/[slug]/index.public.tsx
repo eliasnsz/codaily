@@ -154,7 +154,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     console.log(error);
   }
   
-  try {
     const childrenData = await api.get<WithId<PostData>[]>(`/contents/${user}/${slug}/children`)
     const children = childrenData.data
 
@@ -168,15 +167,4 @@ export const getStaticProps: GetStaticProps = async (context) => {
       },
       revalidate: 60
     }
-  }
-  catch (error) {
-
-    return {
-      props: {},
-      redirect: {
-        destination: "/_404",
-        permanent: false
-      },
-    }
-  }
 }
