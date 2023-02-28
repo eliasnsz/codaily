@@ -3,6 +3,7 @@ import { DefaultLayout, PostAnchor } from './interface'
 import api from '@/services/api'
 import { PostData } from '@/types'
 import { WithId } from 'mongodb'
+import { Center, Heading } from '@chakra-ui/react'
 
 interface IProps {
   content: WithId<PostData>[]
@@ -10,7 +11,17 @@ interface IProps {
 
 export default function Home({ content }: IProps) {
 
-  const post = content[0]
+  if (!content.length) {
+    return (
+      <DefaultLayout title="Home">
+        <Center>
+          <Heading mt={6} fontWeight={600} fontSize="lg">
+            Nenhum conteúdo encontrado.
+          </Heading>
+        </Center>
+      </DefaultLayout>
+    )
+  }
 
   return (
     <>

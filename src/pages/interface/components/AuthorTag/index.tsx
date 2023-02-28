@@ -11,7 +11,7 @@ interface IProps {
 
 export default function AuthorTag({ post }: IProps) {
   return(
-    <Flex align="baseline" gap={4}>
+    <Flex align="baseline" gap={2}>
       <Tag fontFamily="mono" size="sm" colorScheme="purple">
         <LinkComponent href={`/${post.author}`}>
           <Text fontSize="xs">{post.author}</Text>

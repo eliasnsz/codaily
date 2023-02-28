@@ -65,18 +65,21 @@ export default function Post({ post, children, parent }: IProps) {
           </Box>
         </Box>
       </Stack>
-      <Flex 
-        borderRadius="lg"
-        border="1px solid #62356955" 
-        my={6}
-        align="center"
-        minH="70px"
-        px={6}
-      >
-        <AnswerButtonOrEditor 
-          post={post}
-        />
-      </Flex>
+      {
+       post.title &&
+        <Flex 
+          borderRadius="lg"
+          border="1px solid #62356955" 
+          my={6}
+          align="center"
+          minH="70px"
+          px={6}
+        >
+            <AnswerButtonOrEditor 
+            post={parent as WithId<PostData>}
+            />
+        </Flex>
+      }
       <Comments comments={children}/>
     </DefaultLayout>
   )

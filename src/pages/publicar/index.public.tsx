@@ -52,8 +52,6 @@ export default function Publicar() {
       
       return setIsSending(false)
     }
-
-    setIsSending(false)
     return
   }
   
@@ -81,7 +79,7 @@ export default function Publicar() {
         }
 
         <Stack direction="row" justify="end" mt={4}>
-          <Button size="sm" onClick={() => router.push("/")}>
+          <Button size="sm" isDisabled={isSending} onClick={() => router.push("/")}>
             Cancelar
           </Button>
           <Button

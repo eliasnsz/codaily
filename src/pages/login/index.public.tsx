@@ -48,7 +48,6 @@ const Login: React.FC = () => {
     }
     
     router.push("/")
-    setIsSending(false)
   }
 
   return (
