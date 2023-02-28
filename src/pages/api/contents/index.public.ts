@@ -38,6 +38,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     }
 
+    await res.revalidate("/")
+    await res.revalidate(`/${author}`)
+
     return res.status(error?.statusCode || 201).json(error || post)
   }
 
