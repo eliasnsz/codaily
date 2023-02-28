@@ -11,11 +11,9 @@ import Viewer, { Editor } from "../Markdown";
 
 interface IProps {
   post: WithId<PostData>,
-  subCommentAuthor?: string
-  subCommentSlug?: string
 }
 
-export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommentSlug }: IProps) {
+export default function AnswerButtonOrEditor({ post }: IProps) {
 
   const { data } = useSession() 
   const session = data as ISession
@@ -34,7 +32,7 @@ export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommen
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setIsSending(true)
-
+    
     try {
       const response = await api.post("/contents", { 
           body, 
@@ -43,15 +41,16 @@ export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommen
           parent_id: post._id.toString()
         })
       setNewComment(response.data)
+      
 
     } catch (error: any) {
 
-      const { message } = error.response.data
+      const { message } = error?.response?.data
       setGlobalError(message)
+      return setIsSending(false)
     }
 
     setState("published")
-    setIsSending(false)
   }
 
   if (state === "editing") {
@@ -68,7 +67,7 @@ export default function AnswerButtonOrEditor({ post, subCommentAuthor, subCommen
           </Text>
         }
         <Stack direction="row" justify="end" mt={4} mb={-2}>
-          <Button size="sm" onClick={() => setState(null)}>
+          <Button size="sm" isDisabled={isSending} onClick={() => setState(null)}>
             Cancelar
           </Button>
           <Button

@@ -76,7 +76,7 @@ export default function Post({ post, children, parent }: IProps) {
           px={6}
         >
             <AnswerButtonOrEditor 
-            post={parent as WithId<PostData>}
+            post={post}
             />
         </Flex>
       }
