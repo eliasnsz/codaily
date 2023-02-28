@@ -4,7 +4,7 @@ import { Divider, Heading } from "@chakra-ui/react"
 import { WithId } from "mongodb"
 import { GetStaticPaths } from "next"
 import { useSession } from "next-auth/react"
-import Router from "next/router"
+import { useRouter } from "next/router"
 import { GetStaticProps } from "next/types"
 import { ParsedUrlQuery } from "querystring"
 import { useEffect } from "react"
@@ -17,13 +17,16 @@ interface IProps {
 
 export default function User({ user, userContent }: IProps) {
 
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
   useEffect(() => {
-    if (!session) {
-      Router.push("/login")
+    if (status !== "loading") {
+      if (!session) {
+        router.push("/login")
+      }
     }
-  }, [session])
+  }, [session, status, router])
 
   return (
     <DefaultLayout title={user}>

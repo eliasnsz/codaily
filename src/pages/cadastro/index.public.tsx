@@ -21,14 +21,16 @@ interface IError {
 const Login: React.FC = () => {
 
   const router = useRouter()
-  const {data: session} = useSession()
+  const {data: session, status} = useSession()
   const toast = useToast()
 
   useEffect(() => {
-    if (session) {
-      router.push("/")
+    if (status !== "loading") {
+      if (session) {
+        router.push("/")
+      }
     }
-  }, [session, router])
+  }, [session, router, status])
 
   const [isSending, setIsSending] = useState(false)
   const [globalError, setGlobalError] = useState<string | null>(null)
