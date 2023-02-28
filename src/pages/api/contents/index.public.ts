@@ -57,6 +57,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     await deleteOneContent(target)
+
+    await res.revalidate("/")
+    await res.revalidate(`/${target.author}`)
+    
     return res.status(204).json({ ok: true })
   }
 }
