@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, Heading, Input, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, FormLabel, Heading, Icon, Input, InputGroup, InputRightElement, Stack, Text } from "@chakra-ui/react"
 import { signIn, useSession } from "next-auth/react"
 import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from "react"
 import { DefaultLayout, LinkComponent } from "../interface"
@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import api from "@/services/api"
 import { BaseError } from "@/errors"
 import { IBaseError } from "@/types"
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"
 
 interface Target extends EventTarget {
   username: { value: string }
@@ -111,16 +112,41 @@ interface InputComponentProps {
 }
 
 function InputComponent({ type, name, label, setGlobalError }: InputComponentProps) {
+
+  const [isVisible, setIsVisible] = useState(false)
+  
   return(
     <FormLabel fontSize="sm" w="100%">
       {label}
-      <Input 
-        focusBorderColor="#A226B5dd"
-        borderColor="#62356944" 
-        type={type} 
-        name={name}
-        onChange={() => setGlobalError(null)}
-      />
+      {
+        type === "password" ?
+        <InputGroup>
+          <>
+            <Input
+              focusBorderColor="#A226B5dd"
+              borderColor="#62356944"
+              type={isVisible ? "text" : "password"}
+              name={name}
+              onChange={() => setGlobalError(null)}
+            />
+            <InputRightElement>
+              <Icon
+                cursor="pointer"
+                as={isVisible ? AiFillEyeInvisible : AiFillEye}
+                onClick={() => setIsVisible(!isVisible)}
+              />
+            </InputRightElement>
+          </>
+        </InputGroup>
+        :
+        <Input
+          focusBorderColor="#A226B5dd"
+          borderColor="#62356944"
+          type={type}
+          name={name}
+          onChange={() => setGlobalError(null)}
+        />
+      }
     </FormLabel>
   )
 } 
