@@ -1,11 +1,11 @@
 import { Button, Heading, Input, Stack, Text } from "@chakra-ui/react";
 import { FormEvent, useEffect, useState } from "react";
 import { DefaultLayout, Editor } from "../interface";
-import { useRouter } from "next/router"
-import api from "@/services/api";
+import { ISession, PostData } from "@/types";
 import { useSession } from "next-auth/react";
-import { IBaseError, ISession, PostData, UserData } from "@/types";
-import { BaseError } from "@/errors";
+import { useRouter } from "next/router"
+
+import api from "@/services/api";
 
 export default function Publicar() {
   const router = useRouter()
@@ -43,7 +43,7 @@ export default function Publicar() {
         author_id: session?.user?.id
       })
       const post: PostData = response.data
-      router.push(`/${post.author}/${post.slug}`)
+      await router.push(`/${post.author}/${post.slug}`)
       
     } catch (error: any) {
       

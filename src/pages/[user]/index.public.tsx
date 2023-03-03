@@ -57,7 +57,7 @@ export default function User({ user, userContent }: IProps) {
               body={item.body}
             />
           )
-        })
+        }).reverse()
       }
     </DefaultLayout>
   )
