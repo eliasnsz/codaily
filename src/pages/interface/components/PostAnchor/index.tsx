@@ -21,10 +21,7 @@ const PostAnchor: React.FC<PostAnchorData> = (
   return (
     <Box my={1}>
       <Flex>
-        <Box fontWeight={600} mr={2} textAlign="right" w="20px" fontSize="md">
-          {index}.
-        </Box>
-        <Box>
+        <Box w="100%">
           <LinkComponent color="#000" href={`/${author}/${slug}`} fontWeight={600}>
             {
               title ? 
@@ -35,7 +32,7 @@ const PostAnchor: React.FC<PostAnchorData> = (
               <CommentTitle body={body as string}/>
             }
           </LinkComponent>
-          <Flex mt={-1} align="center" gap={1}>
+          <Flex mt={-1} align="center" fontWeight={400} gap={1}>
             <Text fontSize="xs" color="gray.500">
               {comments} comentários
             </Text>
@@ -63,7 +60,7 @@ function CommentTitle({ body }: CommentProps) {
   return (
     <>
       <Box color="gray.500" fontSize="md" fontWeight={400}>
-        <Text w="fit-content" fontStyle="italic" noOfLines={2}>
+        <Text fontStyle="italic" noOfLines={2}>
           <Icon
             w="fit-content"
             mb={-1}
