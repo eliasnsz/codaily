@@ -47,7 +47,7 @@ const PostAnchor: React.FC<PostAnchorData> = (
             </LinkComponent>
             ·
             <Text fontSize="xs" color="gray.500">
-            {moment(publishedAt).fromNow()}
+              {moment(publishedAt).fromNow()}
             </Text>
           </Flex>
         </Box>
