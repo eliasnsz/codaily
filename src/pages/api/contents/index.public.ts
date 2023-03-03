@@ -1,7 +1,7 @@
 import { deleteOneContent, findAllContent, findOneContent, insertOneContent } from "@/controllers";
 import { NextApiRequest, NextApiResponse } from "next";
 import { postValidation } from "@/services/postValidation";
-import { WithId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { PostData } from "@/types";
 import { NotFoundError } from "@/errors";
 import updateOneContent from "@/controllers/updateOneContent";
@@ -38,6 +38,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     }
 
+    if (!post?.title) {
+      const parent = await findOneContent({ 
+        _id: new ObjectId(post?.parent_id as string) 
+      })
+      await res.revalidate(`/${parent?.author}/${parent?.slug}`)
+    }
     await res.revalidate("/")
     await res.revalidate(`/${author}`)
 
