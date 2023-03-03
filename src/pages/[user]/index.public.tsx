@@ -16,22 +16,22 @@ interface IProps {
   userContent: WithId<PostData>[]
 }
 
-export default function User() {
+export default function User({ user, userContent }: IProps) {
   
-  // const { data: session, status } = useSession()
-  // const router = useRouter()
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
-  // useEffect(() => {
-  //   if (status !== "loading") {
-  //     if (!session) {
-  //       router.push("/login")
-  //     }
-  //   }
-  // }, [session, status, router])
+  useEffect(() => {
+    if (status !== "loading") {
+      if (!session) {
+        router.push("/login")
+      }
+    }
+  }, [session, status, router])
 
   return (
-    <DefaultLayout title="">
-      {/* <Heading>
+    <DefaultLayout title={user}>
+      <Heading>
         { user }
       </Heading>
       <Divider borderColor="#62356955" my={4} opacity={1}/>
@@ -58,36 +58,36 @@ export default function User() {
             />
           )
         }).reverse()
-      } */}
+      }
     </DefaultLayout>
   )
 }
 
-// export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
 
-//   const response = await api.get<UserData[]>("/users")
-//   const users = response.data
+  const response = await api.get<UserData[]>("/users")
+  const users = response.data
 
-//   const paths = users.map(({ username }) => ({ params: { user: username }}))
+  const paths = users.map(({ username }) => ({ params: { user: username }}))
 
-//   return {
-//     paths,
-//     fallback: "blocking"
-//   }
-// }
+  return {
+    paths,
+    fallback: "blocking"
+  }
+}
 
-// interface IParams extends ParsedUrlQuery {
-//   user: string
-// }
+interface IParams extends ParsedUrlQuery {
+  user: string
+}
 
-// export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
 
-//   const { user } = context.params as IParams
-//   const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
-//   const userContent = response.data
+  const { user } = context.params as IParams
+  const response = await api.get<WithId<PostData>[]>(`/contents/${user}`)
+  const userContent = response.data
 
-//   return {
-//     props: { user, userContent },
-//     revalidate: 10
-//   }
-// }
+  return {
+    props: { user, userContent },
+    revalidate: 10
+  }
+}

@@ -9,23 +9,23 @@ interface IProps {
   content: WithId<PostData>[]
 }
 
-export default function Home() {
+export default function Home({ content }: IProps) {
 
-  // if (!content.length) {
-  //   return (
-  //     <DefaultLayout title="Home">
-  //       <Center>
-  //         <Heading mt={6} fontWeight={600} fontSize="lg">
-  //           Nenhum conteúdo encontrado.
-  //         </Heading>
-  //       </Center>
-  //     </DefaultLayout>
-  //   )
-  // }
+  if (!content.length) {
+    return (
+      <DefaultLayout title="Home">
+        <Center>
+          <Heading mt={6} fontWeight={600} fontSize="lg">
+            Nenhum conteúdo encontrado.
+          </Heading>
+        </Center>
+      </DefaultLayout>
+    )
+  }
 
   return (
     <>
-      {/* <DefaultLayout title="Home">
+      <DefaultLayout title="Home">
         {
           content.map((post, index) => {
             return (
@@ -41,20 +41,20 @@ export default function Home() {
             )
           })
         }
-      </DefaultLayout> */}
+      </DefaultLayout>
     </>
   )
 }
 
-// export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 
-//   const response = await api.get<WithId<PostData>[]>("/contents")
-//   const content = response.data.reverse()
+  const response = await api.get<WithId<PostData>[]>("/contents")
+  const content = response.data.reverse()
 
-//   return {
-//     props: {
-//       content
-//     },
-//     revalidate: 10
-//   }
-// }
+  return {
+    props: {
+      content
+    },
+    revalidate: 10
+  }
+}

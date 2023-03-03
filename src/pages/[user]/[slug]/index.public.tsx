@@ -19,34 +19,34 @@ interface IProps {
   parent?: WithId<PostData>
 }
 
-export default function Post() {
+export default function Post({ post, children, parent }: IProps) {
 
-  // const { data } = useSession()
-  // const session = data as ISession
+  const { data } = useSession()
+  const session = data as ISession
 
-  // const [isDeleted, setIsDeleted] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(false)
 
-  // if (isDeleted) {
-  //   return (
-  //     <DefaultLayout title={post.title || post.body}>
-  //       <Stack direction="row" spacing={6} px={2}>
-  //         <Box borderRight="1px dotted #62356955" w="1px"/>
-  //         <Center 
-  //           w="100%" 
-  //           border="1px solid #62356955" 
-  //           py={6} 
-  //           borderRadius="lg"
-  //         >
-  //           Conteúdo apagado com sucesso.
-  //         </Center>
-  //       </Stack>
-  //     </DefaultLayout>
-  //   )
-  // }
+  if (isDeleted) {
+    return (
+      <DefaultLayout title={post.title || post.body}>
+        <Stack direction="row" spacing={6} px={2}>
+          <Box borderRight="1px dotted #62356955" w="1px"/>
+          <Center 
+            w="100%" 
+            border="1px solid #62356955" 
+            py={6} 
+            borderRadius="lg"
+          >
+            Conteúdo apagado com sucesso.
+          </Center>
+        </Stack>
+      </DefaultLayout>
+    )
+  }
 
   return (
-    <DefaultLayout title="">
-      {/* <Stack direction="row" spacing={6} px={2}>
+    <DefaultLayout title={post.title || post.body}>
+      <Stack direction="row" spacing={6} px={2}>
         <Box borderRight="1px dotted #62356955" w="1px"/>
         <Box w="100%">
           {
@@ -104,67 +104,67 @@ export default function Post() {
             />
         </Flex>
       }
-      <Comments comments={children}/> */}
+      <Comments comments={children}/>
     </DefaultLayout>
   )
 }
 
-// export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async (context) => {
 
-//   const postsResponse = await api.get<WithId<PostData>[]>("/contents")
-//   const posts = postsResponse.data
+  const postsResponse = await api.get<WithId<PostData>[]>("/contents")
+  const posts = postsResponse.data
   
-//   const paths = posts.map(post => ({ params: { slug: post.slug, user: post.author }}))
+  const paths = posts.map(post => ({ params: { slug: post.slug, user: post.author }}))
 
-//   return {
-//     paths,
-//     fallback: "blocking"
-//   }
-// }
+  return {
+    paths,
+    fallback: "blocking"
+  }
+}
 
-// interface IParams extends ParsedUrlQuery {
-//   user: string,
-//   slug: string
-// }
+interface IParams extends ParsedUrlQuery {
+  user: string,
+  slug: string
+}
 
-// export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
 
-//   const { user, slug } = context.params as IParams  
+  const { user, slug } = context.params as IParams  
   
-//   try {
-//     const parentData = await api.get<WithId<PostData>>(`/contents/${user}/${slug}/parent`)
-//     const parent = parentData.data
+  try {
+    const parentData = await api.get<WithId<PostData>>(`/contents/${user}/${slug}/parent`)
+    const parent = parentData.data
 
-//     const childrenData = await api.get<WithId<PostData>[]>(`/contents/${user}/${slug}/children`)
-//     const children = childrenData.data
+    const childrenData = await api.get<WithId<PostData>[]>(`/contents/${user}/${slug}/children`)
+    const children = childrenData.data
 
-//     const response = await api.get<WithId<PostData>>(`/contents/${user}/${slug}`)
-//     const post = response.data
+    const response = await api.get<WithId<PostData>>(`/contents/${user}/${slug}`)
+    const post = response.data
     
-//     return {
-//       props: {
-//         post,
-//         children,
-//         parent
-//       },
-//       revalidate: 10
-//     }
+    return {
+      props: {
+        post,
+        children,
+        parent
+      },
+      revalidate: 10
+    }
     
-//   } catch (error) {
-//     console.log(error);
-//   }
+  } catch (error) {
+    console.log(error);
+  }
   
-//     const childrenData = await api.get<WithId<PostData>[]>(`/contents/${user}/${slug}/children`)
-//     const children = childrenData.data
+    const childrenData = await api.get<WithId<PostData>[]>(`/contents/${user}/${slug}/children`)
+    const children = childrenData.data
 
-//     const response = await api.get<WithId<PostData>>(`/contents/${user}/${slug}`)
-//     const post = response.data
+    const response = await api.get<WithId<PostData>>(`/contents/${user}/${slug}`)
+    const post = response.data
 
-//     return {
-//       props: {
-//         post,
-//         children,
-//       },
-//       revalidate: 60
-//     }
-// }
+    return {
+      props: {
+        post,
+        children,
+      },
+      revalidate: 60
+    }
+}
