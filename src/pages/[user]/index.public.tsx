@@ -1,4 +1,4 @@
-import { Center, Divider, Heading, ListItem, OrderedList, UnorderedList } from "@chakra-ui/react"
+import { Center, Divider, Heading } from "@chakra-ui/react"
 import { DefaultLayout, PostAnchor } from "../interface"
 import { PostData, UserData } from "@/types"
 import { ParsedUrlQuery } from "querystring"
@@ -43,25 +43,22 @@ export default function User({ user, userContent }: IProps) {
           </Heading>
         </Center>
       }
-      <OrderedList fontWeight={600}>
-        {
-          userContent.map((item, index) => {
-            return (
-              <ListItem key={item._id.toString()}>
-                <PostAnchor
-                  index={index + 1}
-                  author={item.author}
-                  comments={item.children_deep_count}
-                  publishedAt={item.published_at}
-                  slug={item.slug}
-                  title={item.title}
-                  body={item.body}
-                />
-              </ListItem>
-            )
-          }).reverse()
-        }
-      </OrderedList>
+      {
+        userContent.map((item, index) => {
+          return (
+            <PostAnchor
+              index={index + 1}
+              key={item._id.toString()}
+              author={item.author}
+              comments={item.children_deep_count}
+              publishedAt={item.published_at}
+              slug={item.slug}
+              title={item.title}
+              body={item.body}
+            />
+          )
+        }).reverse()
+      }
     </DefaultLayout>
   )
 }
